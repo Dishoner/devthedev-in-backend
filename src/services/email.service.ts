@@ -17,15 +17,23 @@ interface SendEmailParams {
  */
 function createTransporter() {
   // Verify all required environment variables are set
-  if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
-    throw new Error("Missing required Gmail configuration: GMAIL_USER and GMAIL_APP_PASSWORD must be set");
+  if (
+    !process.env.EMAIL_USER ||
+    !process.env.EMAIL_PASSWORD
+  ) {
+    throw new Error("Missing EMAIL_USER or EMAIL_PASSWORD");
   }
 
   const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.secureserver.net",
+    port: 587,
+    secure: false, // MUST be false for port 587
     auth: {
-      user: process.env.GMAIL_USER,
-      pass: process.env.GMAIL_APP_PASSWORD,
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+    tls: {
+      rejectUnauthorized: false, // important for GoDaddy
     },
   });
 
